@@ -1,0 +1,37 @@
+# clean_scheme_performance.py
+
+import pandas as pd
+
+df = pd.read_excel(
+    "data/raw/scheme performace.csv.xlsx"
+)
+
+return_cols = [
+    "return_1yr_pct",
+    "return_3yr_pct",
+    "return_5yr_pct"
+]
+
+for col in return_cols:
+    df[col] = pd.to_numeric(
+        df[col],
+        errors="coerce"
+    )
+
+expense_anomalies = df[
+    (df["expense_ratio_pct"] < 0.1)
+    |
+    (df["expense_ratio_pct"] > 2.5)
+]
+
+print(
+    "Expense Ratio Anomalies:",
+    len(expense_anomalies)
+)
+
+df.to_csv(
+    "data/processed/scheme_performance_clean.csv",
+    index=False
+)
+
+print("Saved Successfully")
